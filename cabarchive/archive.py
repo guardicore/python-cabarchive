@@ -336,7 +336,7 @@ class CabArchive(object):
         offset = struct.calcsize(FMT_CFHEADER)
         offset += struct.calcsize(FMT_CFFOLDER)
         data = struct.pack(FMT_CFHEADER,
-                           'MSCF',                  # signature
+                           b'MSCF',                  # signature
                            archive_size,            # complete size
                            offset,                  # offset to CFFILE
                            3, 1,                    # ver minor major
@@ -363,9 +363,9 @@ class CabArchive(object):
                                 index_into,         # uncompressed offset
                                 0,                  # index into CFFOLDER
                                 f._date_encode(),   # date
-                                f._time_encode(),   # time
+                                int(f._time_encode()),   # time
                                 f._attr_encode())   # attribs
-            data += f.filename + b'\0'
+            data += bytes(f.filename, "utf-8") + b'\0'
             index_into += len(f.contents)
 
         # create each CFDATA
